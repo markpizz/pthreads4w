@@ -46,7 +46,7 @@ CPHDR	= _ptw32.h pthread.h semaphore.h sched.h
 
 OPTIM	= /O2 /Ob0
 
-XXLIBS	= ws2_32.lib
+XXLIBS	= ws2_32.lib winmm.lib
 
 # C++ Exceptions
 VCEFLAGS	= /EHs /TP /DPtW32NoCatchWarn /D__CLEANUP_CXX
@@ -69,11 +69,14 @@ VCDLLD	= pthreadVC$(DLL_VER)d.dll
 # C++ Exceptions in application - using VC version of pthreads dll
 VCXFLAGS	= /EHs /TP /D__CLEANUP_C
 
+STATICFLAGS=/MT /DPTW32_STATIC_LIB -I.. /DHAVE_CONFIG_H /DPTW32_BUILD_INLINED ..\pthread.c
+STATICFLAGSD=/MTd /DPTW32_STATIC_LIB -I.. /DHAVE_CONFIG_H /DPTW32_BUILD_INLINED ..\pthread.c
+
 # Defaults
 CPLIB	= $(VCLIB)
 CPDLL	= $(VCDLL)
 
-CFLAGS= $(OPTIM) /W3 /MD /nologo /Z7
+CFLAGS= $(OPTIM) /W3 /nologo /Z7
 LFLAGS= /INCREMENTAL:NO
 INCLUDES=-I.
 BUILD_DIR=..
@@ -155,52 +158,52 @@ VCX-bench:
 	@ $(MAKE) /E /nologo TEST="$@" CPLIB="$(VCLIB)" CPDLL="$(VCDLL)" EHFLAGS="$(VCXFLAGS)" $(BENCHTESTS)
 
 VC-static VC-small-static:
-	@ $(MAKE) /E /nologo TEST="$@" CPLIB="$(VCLIB)" CPDLL="" EHFLAGS="$(VCFLAGS) /DPTW32_STATIC_LIB" allpassed
+	@ $(MAKE) /E /nologo TEST="$@" CPLIB="" CPDLL="" EHFLAGS="$(VCFLAGS) $(STATICFLAGS)" allpassed
 
 VCE-static VCE-small-static:
-	@ $(MAKE) /E /nologo TEST="$@" CPLIB="$(VCELIB)" CPDLL="" EHFLAGS="$(VCEFLAGS) /DPTW32_STATIC_LIB" allpassed
+	@ $(MAKE) /E /nologo TEST="$@" CPLIB="" CPDLL="" EHFLAGS="$(VCEFLAGS) $(STATICFLAGS)" allpassed
 
 VSE-static VSE-small-static:
-	@ $(MAKE) /E /nologo TEST="$@" CPLIB="$(VSELIB)" CPDLL="" EHFLAGS="$(VSEFLAGS) /DPTW32_STATIC_LIB" allpassed
+	@ $(MAKE) /E /nologo TEST="$@" CPLIB="" CPDLL="" EHFLAGS="$(VSEFLAGS) $(STATICFLAGS)" allpassed
 
 VCX-static VCX-small-static:
-	@ $(MAKE) /E /nologo TEST="$@" CPLIB="$(VCLIB)" CPDLL="" EHFLAGS="$(VCXFLAGS) /DPTW32_STATIC_LIB" allpassed
+	@ $(MAKE) /E /nologo TEST="$@" CPLIB="" CPDLL="" EHFLAGS="$(VCXFLAGS) $(STATICFLAGS)" allpassed
 
 VC-static-bench:
-	@ $(MAKE) /E /nologo TEST="$@" CPLIB="$(VCLIB)" CPDLL="" EHFLAGS="$(VCFLAGS) /DPTW32_STATIC_LIB" $(BENCHTESTS)
+	@ $(MAKE) /E /nologo TEST="$@" CPLIB="" CPDLL="" EHFLAGS="$(VCFLAGS) $(STATICFLAGS)" $(BENCHTESTS)
 
 VCE-static-bench:
-	@ $(MAKE) /E /nologo TEST="$@" CPLIB="$(VCELIB)" CPDLL="" EHFLAGS="$(VCEFLAGS) /DPTW32_STATIC_LIB" $(BENCHTESTS)
+	@ $(MAKE) /E /nologo TEST="$@" CPLIB="" CPDLL="" EHFLAGS="$(VCEFLAGS) $(STATICFLAGS)" $(BENCHTESTS)
 
 VSE-static-bench:
-	@ $(MAKE) /E /nologo TEST="$@" CPLIB="$(VSELIB)" CPDLL="" EHFLAGS="$(VSEFLAGS) /DPTW32_STATIC_LIB" $(BENCHTESTS)
+	@ $(MAKE) /E /nologo TEST="$@" CPLIB="" CPDLL="" EHFLAGS="$(VSEFLAGS) $(STATICFLAGS)" $(BENCHTESTS)
 
 VCX-static-bench:
-	@ $(MAKE) /E /nologo TEST="$@" CPLIB="$(VCLIB)" CPDLL="" EHFLAGS="$(VCXFLAGS) /DPTW32_STATIC_LIB" $(BENCHTESTS)
+	@ $(MAKE) /E /nologo TEST="$@" CPLIB="" CPDLL="" EHFLAGS="$(VCXFLAGS) $(STATICFLAGS)" $(BENCHTESTS)
 
 VC-debug:
 	@ $(MAKE) /E /nologo TEST="$@" CPLIB="$(VCLIBD)" CPDLL="$(VCDLLD)" EHFLAGS="$(VCFLAGS)" allpassed
 
 VC-static-debug VC-small-static-debug:
-	@ $(MAKE) /E /nologo TEST="$@" CPLIB="$(VCLIBD)" CPDLL="" EHFLAGS="$(VCFLAGS) /DPTW32_STATIC_LIB" allpassed
+	@ $(MAKE) /E /nologo TEST="$@" CPLIB="$(VCLIBD)" CPDLL="" EHFLAGS="$(VCFLAGS) $(STATICFLAGSD)" allpassed
 
 VCE-debug:
 	@ $(MAKE) /E /nologo TEST="$@" CPLIB="$(VCELIBD)" CPDLL="$(VCEDLLD)" EHFLAGS="$(VCEFLAGS)" allpassed
 
 VCE-static-debug VCE-small-static-debug:
-	@ $(MAKE) /E /nologo TEST="$@" CPLIB="$(VCELIBD)" CPDLL="" EHFLAGS="$(VCEFLAGS) /DPTW32_STATIC_LIB" allpassed
+	@ $(MAKE) /E /nologo TEST="$@" CPLIB="$(VCELIBD)" CPDLL="" EHFLAGS="$(VCEFLAGS) $(STATICFLAGSD)" allpassed
 
 VSE-debug:
 	@ $(MAKE) /E /nologo TEST="$@" CPLIB="$(VSELIBD)" CPDLL="$(VSEDLLD)" EHFLAGS="$(VSEFLAGS)" allpassed
 
 VSE-static-debug VSE-small-static-debug:
-	@ $(MAKE) /E /nologo TEST="$@" CPLIB="$(VSELIBD)" CPDLL="" EHFLAGS="$(VSEFLAGS) /DPTW32_STATIC_LIB" allpassed
+	@ $(MAKE) /E /nologo TEST="$@" CPLIB="" CPDLL="" EHFLAGS="$(VSEFLAGS) $(STATICFLAGSD)" allpassed
 
 VCX-debug:
 	@ $(MAKE) /E /nologo TEST="$@" CPLIB="$(VCLIBD)" CPDLL="$(VCDLLD)" EHFLAGS="$(VCXFLAGS)" allpassed
 
 VCX-static-debug VCX-small-static-debug:
-	@ $(MAKE) /E /nologo TEST="$@" CPLIB="$(VCLIBD)" CPDLL="" EHFLAGS="$(VCXFLAGS) /DPTW32_STATIC_LIB" allpassed
+	@ $(MAKE) /E /nologo TEST="$@" CPLIB="" CPDLL="" EHFLAGS="$(VCXFLAGS) $(STATICFLAGSD)" allpassed
 
 clean:
 	if exist *.dll $(RM) *.dll
@@ -222,7 +225,7 @@ clean:
 	if exist *.log $(RM) *.log
 
 .c.pass:
-	$(CC) $(EHFLAGS) $(CFLAGS) $(INCLUDES) $*.c /Fe$*.exe /link $(LFLAGS) $(CPLIB) $(XXLIBS)
+	$(CC) $(CFLAGS) $(INCLUDES) $(EHFLAGS) $*.c /Fe$*.exe /link $(LFLAGS) $(CPLIB) $(XXLIBS)
 	@ $(ECHO) ... Running $(TEST) test: $*.exe
 	@ .\$*.exe
 	@ $(ECHO) ...... Passed
